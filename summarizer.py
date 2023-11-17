@@ -11,6 +11,8 @@ load_dotenv()
 SPOTIFY_CLIENT_ID =  os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET =  os.getenv("SPOTIFY_CLIENT_SECRET")
 OPENAI_API_KEY =  os.getenv("OPENAI_API_KEY")
+PODCAST_URI = "spotify:show:"+ os.getenv("PODCAST_URI")
+print(PODCAST_URI)
 
 OUTPUT = ['downloads/youtube', 'downloads/spotify', 'downloads/whisper',  'downloads/gpt3']
 # create output directories if they don't exist
@@ -39,17 +41,17 @@ def summarize(podcast_url, source, max_sentences=10):
     elif source == "spotify":
     
         podcast = SpotifyPodcast(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
-        file_id = podcast.get_episode_id(podcast_url)
-        audio_path = podcast.download_episode(podcast_url)
+        """ file_id = podcast.get_episode_id(podcast_url)
+        audio_path = podcast.download_episode(podcast_url) """
+        podcast.download_all_episodes("https://open.spotify.com/show/01rZy6ri6RtVfyaWeLm0MR")
     
-    transcriber = WhisperTranscriber(OPENAI_API_KEY)
+    """     transcriber = WhisperTranscriber(OPENAI_API_KEY)
     transcript = transcriber.transcribe(audio_path)
     
-    summarizer = GPT3Summarizer(OPENAI_API_KEY, model_engine="gpt-3.5-turbo")
-    summarizer.summarize(file_id, transcript, max_sentences)
+    summarizer = GPT3Summarizer(OPENAI_API_KEY, model_engine="gpt-4-turbo")
+    summarizer.summarize(file_id, transc    ript, max_sentences) """
     
     print(f'Completed summarization for ({podcast_url})')
     
-# summarize("https://open.spotify.com/episode/0YqflJb8Wco8IDdGHPNTu8", "spotify", 12)
-summarize("https://www.youtube.com/watch?v=GkZz2I6sK08", "youtube", 12)
-
+summarize("blah", "spotify", 12)
+# summarize("https://www.youtube.com/watch?v=GkZz2I6sK08", "youtube", 12)

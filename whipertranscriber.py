@@ -73,7 +73,12 @@ class WhisperTranscriber:
 
                 # Convert the MP3 file to text using Whisper API
                 file = open(audio, "rb")
-                response = openai.Audio.transcribe("whisper-1", file)
+                response = openai.audio.transcriptions.create(
+                    model="whisper-1", 
+                    file=file
+                )
+                
+                print(response)
 
                 # Check for errors in the API response
                 if "error" in response:
@@ -81,7 +86,7 @@ class WhisperTranscriber:
                     raise Exception(f"⚠️ Transcription error: {error_msg}")
 
                 # Extract the transcript from the API response
-                transcript = response["text"].strip()
+                transcript = response.text.strip()
 
                 # Save the transcript to a text file
                 with open(transcript_path, "w") as f:
@@ -90,6 +95,7 @@ class WhisperTranscriber:
                     print(f"\t\t↪ saved transcript to {audio.split('.')[0]}.txt (words: {len(transcript.split())}")
             else:
                 # Load the transcript from the text file
+                print("Chunk transcription file found. Skipping to the next one!")
                 with open(transcript_path, "r") as f:
                     transcriptions.append(f.read())
                 pass
@@ -98,3 +104,11 @@ class WhisperTranscriber:
         print(f'↪ Total words: {len(full_transcript.split())} -- characters: {len(full_transcript)}')
             
         return full_transcript
+    
+    def estimate_price(self, audio_path):
+        audio = AudioSegment.from_mp3(audio_path)
+        duration = audio.duration_seconds
+        est_cost = duration * self.openai_price / 60
+        print(f'↪ 💵 Estimated cost: ${est_cost:.2f} ({(duration / 60):.2f} minutes)')
+        
+        return est_cost

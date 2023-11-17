@@ -9,7 +9,7 @@ class GPT3Summarizer:
         openai.api_key = api_key
         self.model_engine = model_engine
         self.max_tokens = max_tokens
-        self.openai_price = float(os.getenv("OPENAI_PRICING_CHAT")) if model_engine == "gpt-3.5-turbo" else float(os.getenv("OPENAI_PRICING_TEXT"))
+        self.openai_price = float(os.getenv("OPENAI_PRICING_CHAT")) if model_engine == "gpt-4-turbo" else float(os.getenv("OPENAI_PRICING_TEXT"))
         
     def num_tokens_from_string(self, string: str, encoding_name: str) -> int:
         # Returns the number of tokens in a text string
